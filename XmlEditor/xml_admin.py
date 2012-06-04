@@ -150,4 +150,4 @@ def xmldump(root):
     etree.strip_attributes(root, '{http://codespeak.net/lxml/objectify/pytype}pytype')
     etree.strip_attributes(root, '{http://www.w3.org/2001/XMLSchema-instance}nil')
     etree.cleanup_namespaces(root)
-    return etree.tostring(root, pretty_print=True)
+    print etree.tostring(root, pretty_print=True)

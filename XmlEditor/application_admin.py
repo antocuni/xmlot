@@ -12,7 +12,7 @@ class DumpXmlAction(Action):
         self.xml_root = xml_root
 
     def gui_run(self, gui_context):
-        print xmldump(self.xml_root)
+        xmldump(self.xml_root)
         print
 
 
