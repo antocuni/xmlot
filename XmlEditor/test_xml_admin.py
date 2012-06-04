@@ -54,7 +54,7 @@ def test_XmlEntity_list():
     f = Foo(elem)
     bars = f.bars
     assert isinstance(bars, XmlListWrapper)
-    assert isinstance(bars[0], XmlEntity)
+    assert isinstance(bars[0], Bar)
     assert bars[0].x == 'hello'
     assert bars[1].x == 'world'
     newbar = Bar()

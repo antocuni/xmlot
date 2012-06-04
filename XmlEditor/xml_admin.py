@@ -31,7 +31,7 @@ class XmlEntity(object):
             except AttributeError:
                 subroot = self._elem # ???
                 val = []
-            return XmlListWrapper(subroot, val)
+            return XmlListWrapper(subroot, sqltype.entity_cls, val)
         else:
             val = getattr(self._elem, attr, None)
             if val is not None and sqltype is not None:
@@ -44,8 +44,8 @@ class XmlEntity(object):
 
 class XmlListWrapper(list):
 
-    def __init__(self, root, items):
-        items = map(XmlEntity, items)
+    def __init__(self, root, Entity, items):
+        items = map(Entity, items)
         list.__init__(self, items)
         self.root = root
 
@@ -86,7 +86,7 @@ class XmlTableView(TableView):
         def get_entities():
             subroot = getattr_ex(xml_root, xml_path)
             items = getattr(subroot, entity_cls.xml_tag)
-            return XmlListWrapper(subroot, items)
+            return XmlListWrapper(subroot, admin.entity, items)
         return self.table_model(admin,
                                 get_entities,
                                 admin.get_columns)
