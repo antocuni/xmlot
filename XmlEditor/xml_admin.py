@@ -17,6 +17,15 @@ class XmlEntity(object):
     class types:
         pass
 
+    _cache = {}
+
+    def __new__(cls, elem=None):
+        if elem is not None and elem in cls._cache:
+            return cls._cache[elem]
+        obj = object.__new__(cls, elem)
+        cls._cache[elem] = obj
+        return obj
+
     def __init__(self, elem=None):
         if elem is None:
             elem = objectify.Element(self.xml_tag)
