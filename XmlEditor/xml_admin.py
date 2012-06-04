@@ -1,7 +1,7 @@
 from lxml import objectify
 from camelot.admin.object_admin import ObjectAdmin
 from camelot.view.proxy.collection_proxy import CollectionProxy
-from camelot.view.model_thread import gui_function
+from camelot.view.model_thread import gui_function, model_function
 from camelot.view.controls.tableview import TableView
 from camelot.admin.action.application_action import OpenTableView
 from camelot.admin.action.list_action import OpenFormView
@@ -102,6 +102,13 @@ class XmlAdmin(ObjectAdmin):
     @gui_function
     def create_table_view(self, gui_context):
         return self.TableView(gui_context, self)
+
+    @model_function
+    def delete(self, obj):
+        assert isinstance(obj, XmlEntity)
+        elem = obj._elem
+        parent = elem.getparent()
+        parent.remove(elem)
 
     def get_filters(self):
         return []
