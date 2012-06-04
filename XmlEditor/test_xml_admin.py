@@ -43,10 +43,13 @@ def test_XmlEntity_list():
         </foo>
     """)
     class Bar(XmlEntity):
-        xml_path = 'bar'
+        xml_path = 'bars'
+        xml_tag = 'bar'
     class Foo(XmlEntity):
+        xml_path = ''
+        xml_tag = 'foo'
         class types:
-            bars = XmlList('bars', Bar)
+            bars = XmlList(Bar)
     #
     f = Foo(elem)
     bars = f.bars
@@ -60,4 +63,8 @@ def test_XmlEntity_list():
     assert bars[2].x == 'foobar'
     assert f.bars[2].x == 'foobar'
     assert elem.bars.bar[2].x == 'foobar'
-
+    #
+    f = Foo()
+    bars = f.bars
+    assert isinstance(bars, XmlListWrapper)
+    assert len(bars) == 0

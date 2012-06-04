@@ -19,15 +19,18 @@ class XmlEntity(object):
 
     def __init__(self, elem=None):
         if elem is None:
-            tagname = self.xml_path.split('.')[-1]
-            elem = objectify.Element(tagname)
+            elem = objectify.Element(self.xml_tag)
         self.__dict__['_elem'] = elem
 
     def __getattr__(self, attr):
         sqltype = getattr(self.types, attr, None)
         if isinstance(sqltype, XmlList):
-            subroot = getattr_ex(self._elem, sqltype.subpath)
-            val = getattr(subroot, sqltype.entity_cls.xml_path)
+            try:
+                subroot = getattr_ex(self._elem, sqltype.subpath)
+                val = getattr(subroot, sqltype.entity_cls.xml_tag)
+            except AttributeError:
+                subroot = self._elem # ???
+                val = []
             return XmlListWrapper(subroot, val)
         else:
             val = getattr(self._elem, attr, None)
@@ -51,14 +54,13 @@ class XmlListWrapper(list):
         self.root.append(obj._elem)
 
 
-
 class XmlList(object):
     """
     Field type which represent a nested list of XML nodes
     """
 
-    def __init__(self, subpath, entity_cls):
-        self.subpath = subpath
+    def __init__(self, entity_cls):
+        self.subpath = entity_cls.xml_path
         self.entity_cls = entity_cls
 
 
@@ -82,8 +84,9 @@ class XmlTableView(TableView):
         xml_path = admin.entity.xml_path
         entity_cls = admin.entity
         def get_entities():
-            elem = getattr_ex(xml_root, xml_path)
-            return map(entity_cls, elem)
+            subroot = getattr_ex(xml_root, xml_path)
+            items = getattr(subroot, entity_cls.xml_tag)
+            return XmlListWrapper(subroot, items)
         return self.table_model(admin,
                                 get_entities,
                                 admin.get_columns)
