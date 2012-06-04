@@ -1,0 +1,16 @@
+<root>
+  <Persons>
+    <Person>
+      <name>Mickey</name>
+      <surname>Mouse</surname>
+      <age>30</age>
+      <male>true</male>
+    </Person>
+    <Person>
+      <name>Donald</name>
+      <surname>Duck</surname>
+      <age>28</age>
+      <male>true</male>
+    </Person>
+  </Persons>
+</root>
