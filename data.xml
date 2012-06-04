@@ -5,12 +5,28 @@
       <surname>Mouse</surname>
       <age>30</age>
       <male>true</male>
+      <Jobs>
+        <Job>
+          <title>Detective</title>
+        </Job>
+        <Job>
+          <title>Uncle</title>
+        </Job>
+      </Jobs>
     </Person>
     <Person>
       <name>Donald</name>
       <surname>Duck</surname>
       <age>28</age>
       <male>true</male>
+      <Jobs>
+        <Job>
+          <title>Unemployed</title>
+        </Job>
+        <Job>
+          <title>Uncle</title>
+        </Job>
+      </Jobs>
     </Person>
   </Persons>
 </root>
