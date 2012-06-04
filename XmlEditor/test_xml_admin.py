@@ -1,7 +1,7 @@
 import py
 from lxml import objectify
 from sqlalchemy.types import Boolean, Integer
-from XmlEditor.xml_admin import getattr_ex, XmlEntity, XmlList
+from XmlEditor.xml_admin import getattr_ex, XmlEntity, XmlList, XmlListWrapper
 
 def test_getattr_ex():
     class A:
@@ -42,14 +42,20 @@ def test_XmlEntity_list():
         </foo>
     """)
     class Bar(XmlEntity):
-        pass
+        xml_path = 'bar'
     class Foo(XmlEntity):
         class types:
-            bars = XmlList('bars.bar', Bar)
+            bars = XmlList('bars', Bar)
     #
     f = Foo(elem)
     bars = f.bars
-    assert iter(bars) # it's not a python list, but it's still iterable
+    assert isinstance(bars, XmlListWrapper)
     assert bars[0].x == 'hello'
     assert bars[1].x == 'world'
+    newbar = Bar()
+    newbar.x = 'foobar'
+    bars.append(newbar)
+    assert bars[2].x == 'foobar'
+    assert f.bars[2].x == 'foobar'
+    assert elem.bars.bar[2].x == 'foobar'
 

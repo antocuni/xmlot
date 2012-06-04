@@ -1,5 +1,5 @@
 from sqlalchemy.types import Boolean, Integer
-from XmlEditor.xml_admin import XmlEntity, XmlAdmin, XmlList
+from XmlEditor.xml_admin import XmlEntity, XmlList, XmlAdmin
 
 class Job(XmlEntity):
     xml_path = None

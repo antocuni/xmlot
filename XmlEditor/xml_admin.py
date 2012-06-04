@@ -1,3 +1,4 @@
+from lxml import objectify
 from camelot.admin.object_admin import ObjectAdmin
 from camelot.view.proxy.collection_proxy import CollectionProxy
 from camelot.view.model_thread import gui_function
@@ -16,13 +17,18 @@ class XmlEntity(object):
     class types:
         pass
 
-    def __init__(self, elem):
+    def __init__(self, elem=None):
+        if elem is None:
+            tagname = self.xml_path.split('.')[-1]
+            elem = objectify.Element(tagname)
         self.__dict__['_elem'] = elem
 
     def __getattr__(self, attr):
         sqltype = getattr(self.types, attr, None)
         if isinstance(sqltype, XmlList):
-            val = getattr_ex(self._elem, sqltype.subpath)
+            subroot = getattr_ex(self._elem, sqltype.subpath)
+            val = getattr(subroot, sqltype.entity_cls.xml_path)
+            return XmlListWrapper(subroot, val)
         else:
             val = getattr(self._elem, attr)
             if sqltype is not None:
@@ -31,6 +37,18 @@ class XmlEntity(object):
 
     def __setattr__(self, attr, value):
         setattr(self._elem, attr, value)
+
+
+class XmlListWrapper(list):
+
+    def __init__(self, root, items):
+        list.__init__(self, items)
+        self.root = root
+
+    def append(self, obj):
+        list.append(self, obj)
+        self.root.append(obj._elem)
+
 
 
 class XmlList(object):
@@ -113,5 +131,12 @@ class XmlAdmin(ObjectAdmin):
                 direction = 'onetomany',
                 admin = admin,
                 )
-
         return attrs
+
+
+def xmldump(root):
+    from lxml import etree
+    etree.strip_attributes(root, '{http://codespeak.net/lxml/objectify/pytype}pytype')
+    etree.strip_attributes(root, '{http://www.w3.org/2001/XMLSchema-instance}nil')
+    etree.cleanup_namespaces(root)
+    return etree.tostring(root, pretty_print=True)
