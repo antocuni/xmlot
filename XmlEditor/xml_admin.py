@@ -110,6 +110,13 @@ class XmlAdmin(ObjectAdmin):
         parent = elem.getparent()
         parent.remove(elem)
 
+    @model_function
+    def copy(self, obj):
+        from copy import deepcopy
+        assert isinstance(obj, XmlEntity)
+        newelem = deepcopy(obj._elem)
+        return obj.__class__(newelem)
+
     def get_filters(self):
         return []
 
