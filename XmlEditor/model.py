@@ -1,6 +1,13 @@
 from sqlalchemy.types import Boolean, Integer
 from XmlEditor.xml_admin import XmlEntity, XmlList, XmlAdmin
 
+def make_static_choices(*values):
+    result = [(None, u'')] + list(values)
+    def choices(obj):
+        return result
+    return choices
+
+
 class Job(XmlEntity):
     xml_path = 'Jobs'
     xml_tag = 'Job'
@@ -26,9 +33,16 @@ class Person(XmlEntity):
         list_display = ['name',
                         'surname',
                         'age',
+                        'city',
                         'male',
                         ]
 
         form_display = list_display + ['jobs']
 
-
+        field_attributes = {
+            'city': dict(
+                choices = make_static_choices((u'Mouseton', u'Mouseton'),
+                                              (u'Duckburg', u'Duckburg')
+                                              ),
+                )
+            }

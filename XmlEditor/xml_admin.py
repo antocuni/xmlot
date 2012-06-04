@@ -1,7 +1,7 @@
 from lxml import objectify
 from camelot.admin.object_admin import ObjectAdmin
 from camelot.view.proxy.collection_proxy import CollectionProxy
-from camelot.view.model_thread import gui_function, model_function
+from camelot.view.model_thread import gui_function, model_function, post
 from camelot.view.controls.tableview import TableView
 from camelot.admin.action.application_action import OpenTableView
 from camelot.admin.action.list_action import OpenFormView
@@ -149,6 +149,16 @@ class XmlAdmin(ObjectAdmin):
                 direction = 'onetomany',
                 admin = admin,
                 )
+        #
+        forced_attrs = self.field_attributes.get(field_name, {})
+        if 'choices' in forced_attrs:
+            attrs['delegate'] = delegates.ComboBoxDelegate
+            attrs['editable'] = True
+            if isinstance(forced_attrs['choices'], list):
+                choices_dict = dict(forced_attrs['choices'])
+                attrs['to_string'] = lambda x : choices_dict[x]
+        #
+        attrs.update(forced_attrs)
         return attrs
 
 

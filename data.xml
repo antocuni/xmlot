@@ -5,6 +5,7 @@
       <surname>Mouse</surname>
       <age>30</age>
       <male>true</male>
+      <city>Mouseton</city>
       <Jobs>
         <Job>
           <title>Detective</title>
@@ -19,6 +20,7 @@
       <surname>Duck</surname>
       <age>28</age>
       <male>true</male>
+      <city>Duckburg</city>
       <Jobs>
         <Job>
           <title>Unemployed</title>
