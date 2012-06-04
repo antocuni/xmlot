@@ -1,11 +1,19 @@
 from camelot.view.art import Icon
+from camelot.admin.action.base import Action
 from camelot.admin.application_admin import ApplicationAdmin
 from camelot.admin.section import Section, SectionItem
 
-from XmlEditor.xml_admin import XmlOpenTableView
+from XmlEditor.xml_admin import XmlOpenTableView, xmldump
 from XmlEditor import model
 
+class DumpXmlAction(Action):
 
+    def __init__(self, xml_root):
+        self.xml_root = xml_root
+
+    def gui_run(self, gui_context):
+        print xmldump(self.xml_root)
+        print
 
 
 class MyApplicationAdmin(ApplicationAdmin):
@@ -28,10 +36,15 @@ class MyApplicationAdmin(ApplicationAdmin):
         action = XmlOpenTableView(admin)
         return SectionItem(action, self)
 
+    def _dump(self):
+        action = DumpXmlAction(self.xml_root)
+        return SectionItem(action, self, 'dump xml')
+
     def get_sections(self):
         return [Section('tables',
                         self,
                         Icon('tango/22x22/actions/document-open.png'),
                         items = [self._item(model.Person),
+                                 self._dump(),
                                  ]),
                 ]
