@@ -1,6 +1,6 @@
 import py
 from lxml import objectify
-from sqlalchemy.types import Boolean, Integer
+from sqlalchemy.types import Boolean, Integer, Unicode
 from XmlEditor.xml_admin import getattr_ex, XmlEntity, XmlList, XmlListWrapper
 
 def test_getattr_ex():
@@ -21,6 +21,7 @@ def test_XmlEntity():
     assert f.x == 'hello'
     f.x = 'world'
     assert elem.x == 'world'
+    assert f.non_existent is None
 
 def test_XmlEntity_types():
     elem = objectify.fromstring("<foo><x>42</x></foo>")
@@ -50,6 +51,7 @@ def test_XmlEntity_list():
     f = Foo(elem)
     bars = f.bars
     assert isinstance(bars, XmlListWrapper)
+    assert isinstance(bars[0], XmlEntity)
     assert bars[0].x == 'hello'
     assert bars[1].x == 'world'
     newbar = Bar()

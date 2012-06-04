@@ -2,7 +2,7 @@ from sqlalchemy.types import Boolean, Integer
 from XmlEditor.xml_admin import XmlEntity, XmlList, XmlAdmin
 
 class Job(XmlEntity):
-    xml_path = None
+    xml_path = 'Job'
 
     class Admin(XmlAdmin):
         verbose_name = 'Job'
@@ -16,7 +16,7 @@ class Person(XmlEntity):
     class types:
         age = Integer()
         male = Boolean()
-        jobs = XmlList('Jobs.Job', Job)
+        jobs = XmlList('Jobs', Job)
 
     class Admin(XmlAdmin):
         verbose_name = 'Person'

@@ -30,8 +30,8 @@ class XmlEntity(object):
             val = getattr(subroot, sqltype.entity_cls.xml_path)
             return XmlListWrapper(subroot, val)
         else:
-            val = getattr(self._elem, attr)
-            if sqltype is not None:
+            val = getattr(self._elem, attr, None)
+            if val is not None and sqltype is not None:
                 val = sqltype.python_type(val)
         return val
 
@@ -42,6 +42,7 @@ class XmlEntity(object):
 class XmlListWrapper(list):
 
     def __init__(self, root, items):
+        items = map(XmlEntity, items)
         list.__init__(self, items)
         self.root = root
 
