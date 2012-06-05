@@ -1,8 +1,9 @@
 import py
 from lxml import objectify
 from sqlalchemy.types import Boolean, Integer, Unicode
-from xmlot.xml_admin import (getattr_ex, XmlEntity, XmlList, XmlListWrapper,
-                             XmlOneToMany, XmlOneToManyListWrapper, xmldump)
+from xmlot.entity import XmlEntity, xmldump
+from xmlot.types import (getattr_ex, XmlList, XmlListWrapper, XmlOneToMany,
+                         XmlOneToManyListWrapper)
 
 def test_getattr_ex():
     class A:
