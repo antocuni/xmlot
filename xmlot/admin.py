@@ -1,8 +1,9 @@
 from camelot.admin.object_admin import ObjectAdmin
+from camelot.admin.action import Action
 from camelot.admin.action.list_action import OpenFormView
 from xmlot.view import XmlTableView
 from xmlot.types import XmlRelation, PrimitiveType
-from xmlot.entity import XmlEntity
+from xmlot.entity import XmlEntity, xmldump
 
 class XmlAdmin(ObjectAdmin):
 
@@ -74,3 +75,11 @@ class XmlAdmin(ObjectAdmin):
         #
         attrs.update(forced_attrs)
         return attrs
+
+
+class DumpXmlAction(Action):
+    verbose_name = 'Dump'
+
+    def model_run(self, model_context):
+        obj = model_context.get_object()
+        xmldump(obj._elem)
