@@ -1,9 +1,8 @@
 import py
 from lxml import objectify
-from sqlalchemy.types import Boolean, Integer, Unicode
 from xmlot.entity import XmlEntity, xmldump
 from xmlot.types import (getattr_ex, XmlList, XmlListWrapper, XmlOneToMany,
-                         XmlOneToManyListWrapper)
+                         XmlOneToManyListWrapper, Boolean, Integer, Unicode)
 
 def test_getattr_ex():
     class A:
@@ -59,7 +58,7 @@ def test_XmlEntity_list():
         xml_path = ''
         xml_tag = 'foo'
         class types:
-            bars = XmlList(Bar)
+            bars = XmlList('bars', Bar)
     #
     f = Foo(elem)
     bars = f.bars
@@ -111,7 +110,7 @@ def test_XmlOneToMany():
         xml_tag = 'Job'
     class Person(XmlEntity):
         class types:
-            jobs = XmlOneToMany(Job, primary_key='name', foreign_key='person')
+            jobs = XmlOneToMany('jobs', Job, primary_key='name', foreign_key='person')
     #
     alice = Person(root.Persons.Person[0])
     bob = Person(root.Persons.Person[1])

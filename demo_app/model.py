@@ -1,7 +1,6 @@
-from sqlalchemy.types import Boolean, Integer
 from xmlot.admin import XmlAdmin
 from xmlot.entity import XmlEntity
-from xmlot.types import XmlList, XmlOneToMany
+from xmlot.types import XmlList, XmlOneToMany, Integer, Boolean, Unicode
 
 def make_static_choices(*values):
     result = [(None, u'')] + list(values)
@@ -35,8 +34,8 @@ class Person(XmlEntity):
     class types:
         age = Integer()
         male = Boolean()
-        jobs = XmlList(Job)
-        uncles = XmlOneToMany(Uncle, primary_key='name', foreign_key='relative')
+        jobs = XmlList('jobs', Job)
+        uncles = XmlOneToMany('uncles', Uncle, primary_key='name', foreign_key='relative')
 
     class Admin(XmlAdmin):
         verbose_name = 'Person'

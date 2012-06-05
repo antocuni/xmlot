@@ -22,14 +22,11 @@ class XmlEntity(object):
         self.__dict__['_elem'] = elem
 
     def __getattr__(self, attr):
-        sqltype = getattr(self.types, attr, None)
-        if isinstance(sqltype, XmlRelation):
-            return sqltype.lookup(self, attr)
+        xmltype = getattr(self.types, attr, None)
+        if xmltype:
+            return xmltype.lookup(self, attr)
         else:
-            val = getattr(self._elem, attr, None)
-            if val is not None and sqltype is not None:
-                val = sqltype.python_type(val)
-        return val
+            return getattr(self._elem, attr, None)
 
     def __setattr__(self, attr, value):
         setattr(self._elem, attr, value)

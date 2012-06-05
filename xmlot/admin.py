@@ -44,7 +44,8 @@ class XmlAdmin(ObjectAdmin):
         from camelot.view.controls import delegates
         #
         attrs = ObjectAdmin.get_field_attributes(self, field_name)
-        sqltype = getattr(self.entity.types, field_name, Unicode())
+        xmltype = getattr(self.entity.types, field_name, None)
+        sqltype = getattr(xmltype, 'sqltype', Unicode())
         get_attrs = _sqlalchemy_to_python_type_.get(sqltype.__class__, None)
         if get_attrs:
             attrs.update(get_attrs(sqltype))

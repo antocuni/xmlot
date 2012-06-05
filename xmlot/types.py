@@ -1,4 +1,30 @@
-class XmlRelation(object):
+from sqlalchemy import types as sqltypes
+
+class Type(object):
+    def __init__(self, name=None):
+        self.name = name
+
+
+class PrimitiveType(object):
+    sqltype = None
+
+    def lookup(self, obj, attr):
+        val = getattr(obj._elem, attr, None)
+        if val is not None:
+            val = self.sqltype.python_type(val)
+        return val
+
+class Integer(PrimitiveType):
+    sqltype = sqltypes.Integer()
+
+class Boolean(PrimitiveType):
+    sqltype = sqltypes.Boolean()
+
+class Unicode(PrimitiveType):
+    sqltype = sqltypes.Unicode()
+
+
+class XmlRelation(Type):
     pass
 
 class XmlList(XmlRelation):
@@ -6,7 +32,8 @@ class XmlList(XmlRelation):
     Field type which represent a nested list of XML nodes
     """
 
-    def __init__(self, entity_cls):
+    def __init__(self, name, entity_cls):
+        self.name = name
         self.subpath = entity_cls.xml_path
         self.entity_cls = entity_cls
 
@@ -22,7 +49,8 @@ class XmlList(XmlRelation):
 
 class XmlOneToMany(XmlRelation):
 
-    def __init__(self, entity_cls, primary_key, foreign_key):
+    def __init__(self, name, entity_cls, primary_key, foreign_key):
+        self.name = name
         self.entity_cls = entity_cls
         self.primary_key = primary_key
         self.foreign_key = foreign_key
