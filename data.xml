@@ -31,4 +31,19 @@
       </Jobs>
     </Person>
   </Persons>
+
+  <Uncles>
+    <Uncle>
+      <name>Uncle Scrooge</name>
+      <age>70</age>
+      <relative>Donald</relative>
+    </Uncle>
+    <Uncle>
+      <name>Mickey's Uncle</name>
+      <age>80</age>
+      <relative>Mickey</relative>
+    </Uncle>
+
+  </Uncles>
+
 </root>

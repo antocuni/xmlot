@@ -1,5 +1,5 @@
 from sqlalchemy.types import Boolean, Integer
-from XmlEditor.xml_admin import XmlEntity, XmlList, XmlAdmin
+from XmlEditor.xml_admin import XmlEntity, XmlList, XmlAdmin, XmlRelatedListWrapper
 
 def make_static_choices(*values):
     result = [(None, u'')] + list(values)
@@ -18,6 +18,13 @@ class Job(XmlEntity):
         list_display = ['title']
         form_display = list_display
 
+class Uncle(XmlEntity):
+    xml_tag = 'Uncle'
+
+    class Admin(XmlAdmin):
+        list_display = ['name', 'age', 'relative']
+    
+
 
 class Person(XmlEntity):
     xml_path = 'Persons'
@@ -26,6 +33,18 @@ class Person(XmlEntity):
         age = Integer()
         male = Boolean()
         jobs = XmlList(Job)
+        uncles = XmlList(Uncle)
+
+    @property
+    def uncles(self):
+        root = self._elem.getroottree().getroot()
+        elems = []
+        for elem in root.Uncles.Uncle:
+            if elem.relative == self.name:
+                elems.append(elem)
+        field_values = dict(relative = self.name)
+        return XmlRelatedListWrapper(root.Uncles, Uncle, elems, field_values)
+
 
     class Admin(XmlAdmin):
         verbose_name = 'Person'
@@ -37,7 +56,7 @@ class Person(XmlEntity):
                         'male',
                         ]
 
-        form_display = list_display + ['jobs']
+        form_display = list_display + ['uncles', 'jobs']
 
         field_attributes = {
             'city': dict(

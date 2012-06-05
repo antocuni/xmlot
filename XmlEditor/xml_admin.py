@@ -62,6 +62,17 @@ class XmlListWrapper(list):
         list.append(self, obj)
         self.root.append(obj._elem)
 
+class XmlRelatedListWrapper(XmlListWrapper):
+
+    def __init__(self, root, Entity, items, field_values):
+        XmlListWrapper.__init__(self, root, Entity, items)
+        self.field_values = field_values
+
+    def append(self, obj):
+        for name, value in self.field_values.iteritems():
+            setattr(obj, name, value)
+        XmlListWrapper.append(self, obj)
+
 
 class XmlList(object):
     """
