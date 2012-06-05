@@ -23,6 +23,8 @@ class Boolean(PrimitiveType):
 class Unicode(PrimitiveType):
     sqltype = sqltypes.Unicode()
 
+class Float(PrimitiveType):
+    sqltypes = sqltypes.Float
 
 class XmlRelation(Type):
     pass
