@@ -76,16 +76,27 @@ class XmlOneToMany(XmlRelation):
                                        filtered_elems, field_values)
 
 
-class XmlListWrapper(list):
+class XmlListWrapper(object):
 
     def __init__(self, root, Entity, items):
-        items = map(Entity, items)
-        list.__init__(self, items)
         self.root = root
+        self.Entity = Entity
+        self.items = items
 
     def append(self, obj):
-        list.append(self, obj)
         self.root.append(obj._elem)
+
+    def __getitem__(self, i):
+        return self.Entity(self.items[i])
+
+    def __len__(self):
+        return len(self.items)
+
+    def __iter__(self):
+        for elem in self.items:
+            yield self.Entity(elem)
+
+
 
 class XmlOneToManyListWrapper(XmlListWrapper):
 
