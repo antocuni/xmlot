@@ -33,6 +33,14 @@ def test_XmlEntity_types():
     assert f.x == 42
     assert f.x.__class__ is int
 
+def test_XmlEntity_cache():
+    elem = objectify.fromstring("<foo><x>hello</x></foo>")
+    class Foo(XmlEntity):
+        pass
+    f1 = Foo(elem)
+    f2 = Foo(elem)
+    assert f1 is f2
+    
 
 def test_XmlEntity_list():
     elem = objectify.fromstring("""
