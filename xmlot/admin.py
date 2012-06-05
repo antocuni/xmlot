@@ -2,7 +2,7 @@ from camelot.admin.object_admin import ObjectAdmin
 from camelot.admin.action.list_action import OpenFormView
 from camelot.view.model_thread import gui_function, model_function, post
 from xmlot.view import XmlTableView
-from xmlot.types import XmlRelation
+from xmlot.types import XmlRelation, PrimitiveType
 
 class XmlAdmin(ObjectAdmin):
 
@@ -45,12 +45,13 @@ class XmlAdmin(ObjectAdmin):
         #
         attrs = ObjectAdmin.get_field_attributes(self, field_name)
         xmltype = getattr(self.entity.types, field_name, None)
-        sqltype = getattr(xmltype, 'sqltype', Unicode())
-        get_attrs = _sqlalchemy_to_python_type_.get(sqltype.__class__, None)
-        if get_attrs:
-            attrs.update(get_attrs(sqltype))
-        elif isinstance(sqltype, XmlRelation):
-            target = sqltype.entity_cls
+        if xmltype is None or isinstance(xmltype, PrimitiveType):
+            sqltype = getattr(xmltype, 'sqltype', Unicode())
+            get_attrs = _sqlalchemy_to_python_type_.get(sqltype.__class__, None)
+            if get_attrs:
+                attrs.update(get_attrs(sqltype))
+        elif isinstance(xmltype, XmlRelation):
+            target = xmltype.entity_cls
             admin = target.Admin(self.app_admin, target)
             attrs.update(
                 python_type = list,
