@@ -1,5 +1,5 @@
 from sqlalchemy.types import Boolean, Integer
-from XmlEditor.xml_admin import XmlEntity, XmlList, XmlAdmin, XmlOneToMany
+from xmlot.xml_admin import XmlEntity, XmlList, XmlAdmin, XmlOneToMany
 
 def make_static_choices(*values):
     result = [(None, u'')] + list(values)

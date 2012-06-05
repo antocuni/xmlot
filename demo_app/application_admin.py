@@ -3,8 +3,8 @@ from camelot.admin.action.base import Action
 from camelot.admin.application_admin import ApplicationAdmin
 from camelot.admin.section import Section, SectionItem
 
-from XmlEditor.xml_admin import XmlOpenTableView, xmldump
-from XmlEditor import model
+from xmlot.xml_admin import XmlOpenTableView, xmldump
+import model
 
 class DumpXmlAction(Action):
 
