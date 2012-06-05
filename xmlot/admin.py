@@ -2,6 +2,7 @@ from camelot.admin.object_admin import ObjectAdmin
 from camelot.admin.action.list_action import OpenFormView
 from xmlot.view import XmlTableView
 from xmlot.types import XmlRelation, PrimitiveType
+from xmlot.entity import XmlEntity
 
 class XmlAdmin(ObjectAdmin):
 
