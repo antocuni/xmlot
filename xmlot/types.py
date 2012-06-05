@@ -28,7 +28,7 @@ class Unicode(PrimitiveType):
     python_type = unicode
 
 class Float(PrimitiveType):
-    sqltype = sqltypes.Float
+    sqltype = sqltypes.Float()
     python_type = float
 
 class XmlRelation(Type):
