@@ -5,7 +5,7 @@ class Type(object):
         self.name = name
 
 
-class PrimitiveType(object):
+class PrimitiveType(Type):
     sqltype = None
 
     def lookup(self, obj, attr):

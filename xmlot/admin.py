@@ -63,6 +63,9 @@ class XmlAdmin(ObjectAdmin):
                 admin = admin,
                 )
         #
+        if getattr(xmltype, 'name', None):
+            attrs['name'] = xmltype.name
+        #
         forced_attrs = self.field_attributes.get(field_name, {})
         if 'choices' in forced_attrs:
             attrs['delegate'] = delegates.ComboBoxDelegate
