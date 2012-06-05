@@ -33,14 +33,8 @@ class XmlEntity(object):
 
     def __getattr__(self, attr):
         sqltype = getattr(self.types, attr, None)
-        if isinstance(sqltype, XmlList):
-            try:
-                subroot = getattr_ex(self._elem, sqltype.subpath)
-                val = getattr(subroot, sqltype.entity_cls.xml_tag)
-            except AttributeError:
-                subroot = self._elem # ???
-                val = []
-            return XmlListWrapper(subroot, sqltype.entity_cls, val)
+        if isinstance(sqltype, XmlRelation):
+            return sqltype.lookup(self, attr)
         else:
             val = getattr(self._elem, attr, None)
             if val is not None and sqltype is not None:
@@ -62,7 +56,7 @@ class XmlListWrapper(list):
         list.append(self, obj)
         self.root.append(obj._elem)
 
-class XmlRelatedListWrapper(XmlListWrapper):
+class XmlOneToManyListWrapper(XmlListWrapper):
 
     def __init__(self, root, Entity, items, field_values):
         XmlListWrapper.__init__(self, root, Entity, items)
@@ -74,7 +68,11 @@ class XmlRelatedListWrapper(XmlListWrapper):
         XmlListWrapper.append(self, obj)
 
 
-class XmlList(object):
+
+class XmlRelation(object):
+    pass
+
+class XmlList(XmlRelation):
     """
     Field type which represent a nested list of XML nodes
     """
@@ -82,6 +80,36 @@ class XmlList(object):
     def __init__(self, entity_cls):
         self.subpath = entity_cls.xml_path
         self.entity_cls = entity_cls
+
+    def lookup(self, obj, attr):
+        try:
+            subroot = getattr_ex(obj._elem, self.subpath)
+            val = getattr(subroot, self.entity_cls.xml_tag)
+        except AttributeError:
+            subroot = obj._elem # ???
+            val = []
+        return XmlListWrapper(subroot, self.entity_cls, val)
+
+
+class XmlOneToMany(XmlRelation):
+
+    def __init__(self, entity_cls, primary_key, foreign_key):
+        self.entity_cls = entity_cls
+        self.primary_key = primary_key
+        self.foreign_key = foreign_key
+
+    def lookup(self, obj, attr):
+        root = obj._elem.getroottree().getroot()
+        subroot = getattr_ex(root, self.entity_cls.xml_path)
+        elems = getattr(subroot, self.entity_cls.xml_tag)
+        filtered_elems = []
+        pkey_value = getattr(obj, self.primary_key)
+        for elem in elems:
+            if getattr(elem, self.foreign_key) == pkey_value:
+                filtered_elems.append(elem)
+        field_values = {self.foreign_key: pkey_value}
+        return XmlOneToManyListWrapper(subroot, self.entity_cls,
+                                       filtered_elems, field_values)
 
 
 class XmlOpenTableView(OpenTableView):
@@ -156,7 +184,7 @@ class XmlAdmin(ObjectAdmin):
         get_attrs = _sqlalchemy_to_python_type_.get(sqltype.__class__, None)
         if get_attrs:
             attrs.update(get_attrs(sqltype))
-        elif isinstance(sqltype, XmlList):
+        elif isinstance(sqltype, XmlRelation):
             target = sqltype.entity_cls
             admin = target.Admin(self.app_admin, target)
             attrs.update(

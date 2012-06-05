@@ -1,7 +1,8 @@
 import py
 from lxml import objectify
 from sqlalchemy.types import Boolean, Integer, Unicode
-from XmlEditor.xml_admin import getattr_ex, XmlEntity, XmlList, XmlListWrapper
+from XmlEditor.xml_admin import (getattr_ex, XmlEntity, XmlList, XmlListWrapper,
+                                 XmlOneToMany, XmlOneToManyListWrapper, xmldump)
 
 def test_getattr_ex():
     class A:
@@ -68,3 +69,57 @@ def test_XmlEntity_list():
     bars = f.bars
     assert isinstance(bars, XmlListWrapper)
     assert len(bars) == 0
+
+def test_XmlOneToMany():
+    root = objectify.fromstring("""
+        <root>
+          <Persons>
+             <Person>
+               <name>alice</name>
+             </Person>
+             <Person>
+               <name>bob</name>
+             </Person>
+          </Persons>
+          <Jobs>
+             <Job>
+               <title>foo</title>
+               <person>alice</person>
+             </Job>
+             <Job>
+               <title>bar</title>
+               <person>alice</person>
+             </Job>
+             <Job>
+               <title>foobar</title>
+               <person>bob</person>
+             </Job>
+          </Jobs>
+        </root>
+    """)
+    class Job(XmlEntity):
+        xml_path = 'Jobs'
+        xml_tag = 'Job'
+    class Person(XmlEntity):
+        class types:
+            jobs = XmlOneToMany(Job, primary_key='name', foreign_key='person')
+    #
+    alice = Person(root.Persons.Person[0])
+    bob = Person(root.Persons.Person[1])
+    a_jobs = alice.jobs
+    assert isinstance(a_jobs, XmlOneToManyListWrapper)
+    assert len(a_jobs) == 2
+    assert a_jobs[0].title == 'foo'
+    assert a_jobs[1].title == 'bar'
+    #
+    b_jobs = bob.jobs
+    assert len(b_jobs) == 1
+    assert b_jobs[0].title == 'foobar'
+    #
+    myjob = Job()
+    myjob.title = 'xxx'
+    assert myjob.person is None
+    b_jobs.append(myjob)
+    assert myjob.person == 'bob'
+    assert root.Jobs.Job[3].title == 'xxx'
+    assert root.Jobs.Job[3].person == 'bob'
