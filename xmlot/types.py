@@ -7,24 +7,29 @@ class Type(object):
 
 class PrimitiveType(Type):
     sqltype = None
+    python_type = lambda x: x
 
     def lookup(self, obj, attr):
         val = getattr(obj._elem, attr, None)
         if val is not None:
-            val = self.sqltype.python_type(val)
+            val = self.python_type(val)
         return val
 
 class Integer(PrimitiveType):
     sqltype = sqltypes.Integer()
+    python_type = int
 
 class Boolean(PrimitiveType):
     sqltype = sqltypes.Boolean()
+    python_type = bool
 
 class Unicode(PrimitiveType):
     sqltype = sqltypes.Unicode()
+    python_type = unicode
 
 class Float(PrimitiveType):
-    sqltypes = sqltypes.Float
+    sqltype = sqltypes.Float
+    python_type = float
 
 class XmlRelation(Type):
     pass
