@@ -1,6 +1,5 @@
 from camelot.admin.object_admin import ObjectAdmin
 from camelot.admin.action.list_action import OpenFormView
-from camelot.view.model_thread import gui_function, model_function, post
 from xmlot.view import XmlTableView
 from xmlot.types import XmlRelation, PrimitiveType
 
@@ -11,18 +10,15 @@ class XmlAdmin(ObjectAdmin):
     search_all_fields = False
     list_search = []
 
-    @gui_function
     def create_table_view(self, gui_context):
         return self.TableView(gui_context, self)
 
-    @model_function
     def delete(self, obj):
         assert isinstance(obj, XmlEntity)
         elem = obj._elem
         parent = elem.getparent()
         parent.remove(elem)
 
-    @model_function
     def copy(self, obj):
         from copy import deepcopy
         assert isinstance(obj, XmlEntity)
