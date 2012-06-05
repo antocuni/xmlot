@@ -1,6 +1,7 @@
 from camelot.view.proxy.collection_proxy import CollectionProxy
 from camelot.view.controls.tableview import TableView
 from camelot.admin.action.application_action import OpenTableView
+from xmlot.types import getattr_ex, XmlListWrapper
 
 
 class XmlOpenTableView(OpenTableView):

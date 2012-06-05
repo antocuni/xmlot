@@ -1,5 +1,8 @@
 from camelot.admin.object_admin import ObjectAdmin
+from camelot.admin.action.list_action import OpenFormView
 from camelot.view.model_thread import gui_function, model_function, post
+from xmlot.view import XmlTableView
+from xmlot.types import XmlRelation
 
 class XmlAdmin(ObjectAdmin):
 
