@@ -9,7 +9,7 @@ def make_static_choices(*values):
     return choices
 
 class MyEntity(XmlEntity):
-    xml_ns = 'http://foo.bar'
+    xmlns = 'http://foo.bar'
 
 
 class Job(MyEntity):

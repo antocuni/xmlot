@@ -3,7 +3,7 @@ from xmlot.types import XmlRelation
 
 
 class XmlEntity(object):
-    xml_ns = None   # default to no namespace
+    xmlns = None   # default to no namespace
     xml_path = None # needs to be overridden
     xml_tag = None  # needs to be overridden
     class types:
@@ -21,8 +21,8 @@ class XmlEntity(object):
     def __init__(self, elem=None):
         if elem is None:
             tag = self.xml_tag
-            if self.xml_ns is not None:
-                tag = '{%s}%s' % (self.xml_ns, tag)
+            if self.xmlns is not None:
+                tag = '{%s}%s' % (self.xmlns, tag)
             elem = objectify.Element(tag)
         self.__dict__['_elem'] = elem
 

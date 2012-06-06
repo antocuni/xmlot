@@ -27,7 +27,7 @@ def test_XmlEntity_namespace():
     class Foo(XmlEntity):
         xml_tag = 'foo'
     class Bar(XmlEntity):
-        xml_ns = 'http://bar.com'
+        xmlns = 'http://bar.com'
         xml_tag = 'bar'
     f = Foo()
     assert f._elem.tag == 'foo'
