@@ -1,4 +1,4 @@
-<root>
+<root xmlns="http://foo.bar">
   <Persons>
     <Person>
       <name>Mickey</name>
@@ -43,7 +43,5 @@
       <age>80</age>
       <relative>Mickey</relative>
     </Uncle>
-
   </Uncles>
-
 </root>

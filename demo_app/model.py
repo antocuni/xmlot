@@ -1,6 +1,6 @@
-from xmlot.admin import XmlAdmin
+from xmlot.admin import XmlAdmin, DumpXmlAction
 from xmlot.entity import XmlEntity
-from xmlot.types import XmlList, XmlOneToMany, Integer, Boolean, Unicode
+from xmlot.types import XmlList, XmlOneToMany, Integer, Boolean, Unicode, Float
 
 def make_static_choices(*values):
     result = [(None, u'')] + list(values)
@@ -8,8 +8,11 @@ def make_static_choices(*values):
         return result
     return choices
 
+class MyEntity(XmlEntity):
+    xml_ns = 'http://foo.bar'
 
-class Job(XmlEntity):
+
+class Job(MyEntity):
     xml_path = 'Jobs'
     xml_tag = 'Job'
 
@@ -19,7 +22,7 @@ class Job(XmlEntity):
         list_display = ['title']
         form_display = list_display
 
-class Uncle(XmlEntity):
+class Uncle(MyEntity):
     xml_path = 'Uncles'
     xml_tag = 'Uncle'
 
@@ -28,7 +31,7 @@ class Uncle(XmlEntity):
     
 
 
-class Person(XmlEntity):
+class Person(MyEntity):
     xml_path = 'Persons'
     xml_tag = 'Person'
     class types:
@@ -47,6 +50,7 @@ class Person(XmlEntity):
                         'male',
                         ]
 
+        form_actions = [DumpXmlAction()]
         form_display = list_display + ['uncles', 'jobs']
 
         field_attributes = {

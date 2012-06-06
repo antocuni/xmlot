@@ -13,7 +13,6 @@ def test_getattr_ex():
     with py.test.raises(AttributeError):
         getattr_ex(A, 'B.X')
 
-
 def test_XmlEntity():
     elem = objectify.fromstring("<foo><x>hello</x></foo>")
     class Foo(XmlEntity):
@@ -23,6 +22,18 @@ def test_XmlEntity():
     f.x = 'world'
     assert elem.x == 'world'
     assert f.non_existent is None
+
+def test_XmlEntity_namespace():
+    class Foo(XmlEntity):
+        xml_tag = 'foo'
+    class Bar(XmlEntity):
+        xml_ns = 'http://bar.com'
+        xml_tag = 'bar'
+    f = Foo()
+    assert f._elem.tag == 'foo'
+    b = Bar()
+    assert b._elem.tag == '{http://bar.com}bar'
+
 
 def test_XmlEntity_types():
     elem = objectify.fromstring("<foo><x>42</x></foo>")

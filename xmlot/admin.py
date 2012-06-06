@@ -78,7 +78,7 @@ class XmlAdmin(ObjectAdmin):
 
 
 class DumpXmlAction(Action):
-    verbose_name = 'Dump'
+    verbose_name = 'Dump XML'
 
     def model_run(self, model_context):
         obj = model_context.get_object()
