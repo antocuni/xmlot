@@ -13,7 +13,7 @@ class Type(object):
 
 class PrimitiveType(Type):
     sqltype = None
-    python_type = lambda x: x
+    python_type = staticmethod(lambda x: x)
 
     def lookup(self, obj, attr):
         val = getattr(obj._elem, attr, None)
@@ -55,10 +55,13 @@ class Float(PrimitiveType):
 
 class DateTime(PrimitiveType):
     sqltype = sqltypes.DateTime()
+    default_format = '%Y-%m-%d %H:%M:%s'
 
-    def __init__(self, name=None, format='%Y-%m-%d %H:%M:%s'):
+    def __init__(self, name=None, format=None):
         PrimitiveType.__init__(self, name)
-        self.format=format
+        if format is None:
+            format = self.default_format
+        self.format = format
         
     def python_type(self, s):
         return datetime.strptime(unicode(s), self.format)
