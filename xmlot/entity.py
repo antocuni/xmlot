@@ -38,10 +38,12 @@ class XmlEntity(object):
 
 
 
-
-def xmldump(root):
+def xmltostring(root):
     from lxml import etree
     etree.strip_attributes(root, '{http://codespeak.net/lxml/objectify/pytype}pytype')
     etree.strip_attributes(root, '{http://www.w3.org/2001/XMLSchema-instance}nil')
     etree.cleanup_namespaces(root)
-    print etree.tostring(root, pretty_print=True)
+    return etree.tostring(root, pretty_print=True)
+
+def xmldump(root):
+    print xmltostring(root)
