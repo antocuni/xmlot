@@ -10,6 +10,7 @@ def test_getattr_ex():
             C = 42
     assert getattr_ex(A, 'B') is A.B
     assert getattr_ex(A, 'B.C') == 42
+    assert getattr_ex(A, '') is A
     with py.test.raises(AttributeError):
         getattr_ex(A, 'B.X')
 
@@ -34,7 +35,6 @@ def test_XmlEntity_namespace():
     b = Bar()
     assert b._elem.tag == '{http://bar.com}bar'
 
-
 def test_XmlEntity_types():
     elem = objectify.fromstring("<foo><x>42</x></foo>")
     class Foo(XmlEntity):
@@ -51,7 +51,6 @@ def test_XmlEntity_cache():
     f1 = Foo(elem)
     f2 = Foo(elem)
     assert f1 is f2
-    
 
 def test_XmlEntity_list():
     elem = objectify.fromstring("""

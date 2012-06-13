@@ -111,6 +111,8 @@ class XmlOneToManyListWrapper(XmlListWrapper):
 
 
 def getattr_ex(obj, attrs):
+    if attrs == '':
+        return obj
     for attr in attrs.split('.'):
         obj = getattr(obj, attr)
     return obj
