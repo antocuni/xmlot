@@ -3,9 +3,11 @@ from datetime import datetime
 from PyQt4.QtCore import Qt
 from PyQt4 import QtGui
 from camelot.admin.application_admin import ApplicationAdmin
+from camelot.admin.action import list_action, application_action
 from camelot.admin.action.base import Action
 from camelot.admin.section import SectionItem
 from camelot.view.art import Icon
+from camelot.core.utils import ugettext_lazy as _
 from xmlot.entity import xmltostring
 from xmlot.view import XmlOpenTableView
 
@@ -46,13 +48,40 @@ class XmlApplicationAdmin(ApplicationAdmin):
             return [SaveXml()] + self.edit_actions + self.change_row_actions + \
                 self.export_actions
 
+    def get_main_menu( self ):
+        """
+        :return: a list of :class:`camelot.admin.menu.Menu` objects, or None if 
+            there should be no main menu
+        """
+        from camelot.admin.menu import Menu
+
+        return [ Menu( _('&File'),
+                       [ SaveXml(),
+                         Menu( _('Export To'),
+                               self.export_actions ),
+                         None,
+                         application_action.Exit(),
+                         ] ),
+                 Menu( _('&Edit'),
+                       self.edit_actions + [
+                        None,
+                        list_action.SelectAll(),
+                        None,
+                        list_action.ReplaceFieldContents(),   
+                        ]),
+                 Menu( _('View'),
+                       [ application_action.Refresh(),
+                         Menu( _('Go To'), self.change_row_actions) ] ),
+                 ]
+
+
 
 class SaveXml(Action):
 
     shortcut = QtGui.QKeySequence.Save
     icon = Icon('tango/16x16/devices/media-floppy.png')
-    tooltip = "Salva le modifiche su disco"
-    verbose_name = 'Salva'
+    tooltip = _('Save')
+    verbose_name = _('Save')
     
     def gui_run(self, gui_context):
         app_admin = gui_context.admin.get_application_admin()
