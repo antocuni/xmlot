@@ -1,9 +1,7 @@
 from camelot.view.art import Icon
 from camelot.admin.action.base import Action
-from camelot.admin.application_admin import ApplicationAdmin
 from camelot.admin.section import Section, SectionItem
-
-from xmlot.view import XmlOpenTableView
+from xmlot.application_admin import XmlApplicationAdmin
 from xmlot.entity import xmldump
 import model
 
@@ -17,25 +15,14 @@ class DumpXmlAction(Action):
         print
 
 
-class MyApplicationAdmin(ApplicationAdmin):
+class MyApplicationAdmin(XmlApplicationAdmin):
   
     name = 'Xml Editor'
     application_url = '...'
     help_url = '...'
     author = '...'
     domain = '...'
-
-    def __init__(self):
-        from lxml import objectify
-        ApplicationAdmin.__init__(self)
-        with open('data.xml') as xml:
-            self.xml_root = objectify.fromstring(xml.read())
-
-    def _item(self, cls):
-        admin = self.get_related_admin(cls)
-        assert admin is not None
-        action = XmlOpenTableView(admin)
-        return SectionItem(action, self)
+    xml_path = 'data.xml'
 
     def _dump(self):
         action = DumpXmlAction(self.xml_root)

@@ -37,7 +37,6 @@ class XmlEntity(object):
         setattr(self._elem, attr, value)
 
 
-
 def xmltostring(root):
     from lxml import etree
     etree.strip_attributes(root, '{http://codespeak.net/lxml/objectify/pytype}pytype')
