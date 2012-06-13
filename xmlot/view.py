@@ -45,7 +45,7 @@ class XmlTableView(TableView):
             search_fields = self.admin.list_search
         text = unicode(text)
         def search_filter(xmllist):
-            return xmllist.filter(search_fields, text.lower())
+            return xmllist.filter(search_fields, text)
         self.search_filter = search_filter
         self.rebuild_query()
 

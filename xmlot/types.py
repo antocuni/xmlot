@@ -4,6 +4,8 @@ class Type(object):
     def __init__(self, name=None):
         self.name = name
 
+    def matches(self, value, text):
+        return False
 
 class PrimitiveType(Type):
     sqltype = None
@@ -15,9 +17,17 @@ class PrimitiveType(Type):
             val = self.python_type(val)
         return val
 
+    def matches(self, value, text):
+        try:
+            value2 = self.python_type(text)
+        except ValueError:
+            return False
+        return value == value2
+
 class Integer(PrimitiveType):
     sqltype = sqltypes.Integer()
     python_type = int
+
 
 class Boolean(PrimitiveType):
     sqltype = sqltypes.Boolean()
@@ -26,6 +36,9 @@ class Boolean(PrimitiveType):
 class Unicode(PrimitiveType):
     sqltype = sqltypes.Unicode()
     python_type = unicode
+
+    def matches(self, value, text):
+        return text in unicode(value).lower()
 
 class Float(PrimitiveType):
     sqltype = sqltypes.Float()
@@ -97,11 +110,13 @@ class XmlListWrapper(object):
             yield self.Entity(elem)
 
     def filter(self, search_fields, text):
+        text = text.lower()
         newitems = []
         for item in self:
             for field in search_fields:
-                field_repr = unicode(getattr(item, field))
-                if text in field_repr.lower():
+                field_type = getattr(item.__class__.types, field, Unicode())
+                field_val = getattr(item, field)
+                if field_type.matches(field_val, text):
                     newitems.append(item)
         return self.__class__(self.root, self.Entity, newitems)
 
