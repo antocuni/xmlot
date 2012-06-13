@@ -9,7 +9,7 @@ class XmlAdmin(ObjectAdmin):
 
     TableView = XmlTableView
     list_action = OpenFormView()
-    search_all_fields = False
+    search_all_fields = True
     list_search = []
 
     def create_table_view(self, gui_context):

@@ -39,9 +39,13 @@ class XmlTableView(TableView):
 
     @QtCore.pyqtSlot(str)
     def startSearch(self, text):
+        if self.admin.search_all_fields:
+            search_fields = self.admin.list_display
+        else:
+            search_fields = self.admin.list_search
         text = unicode(text)
         def search_filter(xmllist):
-            return xmllist.filter(self.admin.list_search, text.lower())
+            return xmllist.filter(search_fields, text.lower())
         self.search_filter = search_filter
         self.rebuild_query()
 

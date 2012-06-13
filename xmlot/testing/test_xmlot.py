@@ -119,7 +119,6 @@ def test_XmlList_filter():
     #
     mylist2 = mylist.filter(['x'], 'hello xxx')
     assert len(mylist2) == 0
-    
 
 
 def test_XmlOneToMany():
