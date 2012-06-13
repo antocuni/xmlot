@@ -11,6 +11,7 @@ class XmlAdmin(ObjectAdmin):
     list_action = OpenFormView()
     search_all_fields = True
     list_search = []
+    expanded_list_search = []
 
     def create_table_view(self, gui_context):
         return self.TableView(gui_context, self)
@@ -31,6 +32,9 @@ class XmlAdmin(ObjectAdmin):
         return []
 
     def get_actions(self):
+        return []
+
+    def get_expanded_search_fields(self):
         return []
 
     def get_query(self):
