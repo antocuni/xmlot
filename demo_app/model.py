@@ -43,6 +43,7 @@ class Person(MyEntity):
     class Admin(XmlAdmin):
         verbose_name = 'Person'
         verbose_name_plural = 'Persons'
+        list_search = ['name', 'surname']
         list_display = ['name',
                         'surname',
                         'age',

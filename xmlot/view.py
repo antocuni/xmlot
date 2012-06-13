@@ -1,7 +1,20 @@
+from PyQt4 import QtCore
 from camelot.view.proxy.collection_proxy import CollectionProxy
 from camelot.view.controls.tableview import TableView
 from camelot.admin.action.application_action import OpenTableView
-from xmlot.types import getattr_ex, XmlListWrapper
+
+class XmlCollectionProxy(CollectionProxy):
+
+    _query_getter = None
+
+    def setQuery(self, query_getter):
+        self._query_getter = query_getter
+        self.refresh()
+
+    def get_collection(self):
+        if self._query_getter:
+            return self._query_getter()
+        return []
 
 
 class XmlOpenTableView(OpenTableView):
@@ -17,16 +30,22 @@ class XmlOpenTableView(OpenTableView):
 
 class XmlTableView(TableView):
 
-    table_model = CollectionProxy
+    table_model = XmlCollectionProxy
 
     def create_table_model(self, admin):
-        xml_root = admin.app_admin.xml_root
-        xml_path = admin.entity.xml_path
-        entity_cls = admin.entity
-        def get_entities():
-            subroot = getattr_ex(xml_root, xml_path)
-            items = getattr(subroot, entity_cls.xml_tag)
-            return XmlListWrapper(subroot, admin.entity, items)
         return self.table_model(admin,
-                                get_entities,
+                                lambda: [],
                                 admin.get_columns)
+
+    @QtCore.pyqtSlot(str)
+    def startSearch(self, text):
+        text = unicode(text)
+        def search_filter(xmllist):
+            return xmllist.filter(self.admin.list_search, text.lower())
+        self.search_filter = search_filter
+        self.rebuild_query()
+
+    @QtCore.pyqtSlot(object)
+    def _set_query(self, query_getter):
+        self.table.model().setQuery(query_getter)
+        self.table.clearSelection()

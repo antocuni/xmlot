@@ -96,6 +96,14 @@ class XmlListWrapper(object):
         for elem in self.items:
             yield self.Entity(elem)
 
+    def filter(self, search_fields, text):
+        newitems = []
+        for item in self:
+            for field in search_fields:
+                field_repr = unicode(getattr(item, field))
+                if text in field_repr.lower():
+                    newitems.append(item)
+        return self.__class__(self.root, self.Entity, newitems)
 
 
 class XmlOneToManyListWrapper(XmlListWrapper):

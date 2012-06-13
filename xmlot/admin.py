@@ -2,7 +2,7 @@ from camelot.admin.object_admin import ObjectAdmin
 from camelot.admin.action import Action
 from camelot.admin.action.list_action import OpenFormView
 from xmlot.view import XmlTableView
-from xmlot.types import XmlRelation, PrimitiveType
+from xmlot.types import XmlRelation, PrimitiveType, getattr_ex, XmlListWrapper
 from xmlot.entity import XmlEntity, xmldump
 
 class XmlAdmin(ObjectAdmin):
@@ -34,7 +34,11 @@ class XmlAdmin(ObjectAdmin):
         return []
 
     def get_query(self):
-        return 'QUERY' # XXX
+        xml_root = self.app_admin.xml_root
+        xml_path = self.entity.xml_path
+        subroot = getattr_ex(xml_root, self.entity.xml_path)
+        items = getattr(subroot, self.entity.xml_tag)
+        return XmlListWrapper(subroot, self.entity, items)
 
     def get_field_attributes(self, field_name):
         from sqlalchemy.types import Unicode

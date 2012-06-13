@@ -88,6 +88,40 @@ def test_XmlEntity_list():
     assert isinstance(bars, XmlListWrapper)
     assert len(bars) == 0
 
+
+def test_XmlList_filter():
+    root = objectify.fromstring("""
+      <bars>
+        <bar>
+          <x>hello</x>
+          <y>world</y>
+        </bar>
+        <bar>
+          <x>foo</x>
+          <y>bar</y>
+        </bar>
+      </bars>
+    """)
+    class Bar(XmlEntity):
+        xml_path = ''
+        xml_tag = 'bar'
+    mylist = XmlListWrapper(root, Bar, root.bar)
+    mylist2 = mylist.filter(['x'], 'hel')
+    assert len(mylist2) == 1
+    assert mylist2[0].x == 'hello'
+    #
+    mylist2 = mylist.filter(['x', 'y'], 'ba')
+    assert len(mylist2) == 1
+    assert mylist2[0].x == 'foo'
+    #
+    mylist2 = mylist.filter([], '')
+    assert len(mylist2) == 0
+    #
+    mylist2 = mylist.filter(['x'], 'hello xxx')
+    assert len(mylist2) == 0
+    
+
+
 def test_XmlOneToMany():
     root = objectify.fromstring("""
         <root>
