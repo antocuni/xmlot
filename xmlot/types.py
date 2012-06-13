@@ -31,7 +31,12 @@ class Integer(PrimitiveType):
 
 class Boolean(PrimitiveType):
     sqltype = sqltypes.Boolean()
-    python_type = bool
+    @staticmethod
+    def python_type(val):
+        if isinstance(val, basestring):
+            val = val.strip().lower()
+            return val == 'true'
+        return bool(val) # ???
 
 class Unicode(PrimitiveType):
     sqltype = sqltypes.Unicode()

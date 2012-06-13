@@ -35,6 +35,10 @@ def test_XmlEntity_namespace():
     b = Bar()
     assert b._elem.tag == '{http://bar.com}bar'
 
+def test_Boolean():
+    assert Boolean.python_type('true') == True
+    assert Boolean.python_type('false') == False
+
 def test_XmlEntity_types():
     elem = objectify.fromstring("<foo><x>42</x></foo>")
     class Foo(XmlEntity):
