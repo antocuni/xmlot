@@ -34,7 +34,10 @@ class XmlEntity(object):
             return getattr(self._elem, attr, None)
 
     def __setattr__(self, attr, value):
-        setattr(self._elem, attr, value)
+        xmltype = getattr(self.types, attr, None)
+        if xmltype:
+            value = xmltype.toxml(value)
+        return setattr(self._elem, attr, value)
 
 
 def xmltostring(root):

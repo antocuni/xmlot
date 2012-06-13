@@ -1,8 +1,12 @@
+from datetime import datetime
 from sqlalchemy import types as sqltypes
 
 class Type(object):
     def __init__(self, name=None):
         self.name = name
+
+    def toxml(self, value):
+        return value
 
     def matches(self, value, text):
         return False
@@ -40,7 +44,6 @@ class Boolean(PrimitiveType):
 
 class Unicode(PrimitiveType):
     sqltype = sqltypes.Unicode()
-    python_type = unicode
 
     def matches(self, value, text):
         return text in unicode(value).lower()
@@ -48,6 +51,20 @@ class Unicode(PrimitiveType):
 class Float(PrimitiveType):
     sqltype = sqltypes.Float()
     python_type = float
+
+
+class DateTime(PrimitiveType):
+    sqltype = sqltypes.DateTime()
+
+    def __init__(self, name=None, format='%Y-%m-%d %H:%M:%s'):
+        PrimitiveType.__init__(self, name)
+        self.format=format
+        
+    def python_type(self, s):
+        return datetime.strptime(unicode(s), self.format)
+
+    def toxml(self, s):
+        return s.strftime(self.format)
 
 class XmlRelation(Type):
     pass

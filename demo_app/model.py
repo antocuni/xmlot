@@ -1,6 +1,7 @@
 from xmlot.admin import XmlAdmin, DumpXmlAction
 from xmlot.entity import XmlEntity
-from xmlot.types import XmlList, XmlOneToMany, Integer, Boolean, Unicode, Float
+from xmlot.types import XmlList, XmlOneToMany, Integer, Boolean, Unicode, Float, DateTime
+
 
 def make_static_choices(*values):
     result = [(None, u'')] + list(values)
@@ -37,6 +38,7 @@ class Person(MyEntity):
     class types:
         age = Integer()
         male = Boolean()
+        birthday = DateTime()
         jobs = XmlList('jobs', Job)
         uncles = XmlOneToMany('uncles', Uncle, primary_key='name', foreign_key='relative')
 
@@ -47,6 +49,7 @@ class Person(MyEntity):
         list_display = ['name',
                         'surname',
                         'age',
+                        'birthday',
                         'city',
                         'male',
                         ]

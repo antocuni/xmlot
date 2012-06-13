@@ -1,8 +1,9 @@
 import py
+from datetime import datetime
 from lxml import objectify
 from xmlot.entity import XmlEntity, xmldump
 from xmlot.types import (getattr_ex, XmlList, XmlListWrapper, XmlOneToMany,
-                         XmlOneToManyListWrapper, Boolean, Integer, Unicode)
+                         XmlOneToManyListWrapper, Boolean, Integer, Unicode, DateTime)
 
 def test_getattr_ex():
     class A:
@@ -40,13 +41,17 @@ def test_Boolean():
     assert Boolean.python_type('false') == False
 
 def test_XmlEntity_types():
-    elem = objectify.fromstring("<foo><x>42</x></foo>")
+    elem = objectify.fromstring("<foo><x>42</x> <y>2012-05-13</y></foo>")
     class Foo(XmlEntity):
         class types:
             x = Integer()
+            y = DateTime(format='%Y-%m-%d')
     f = Foo(elem)
     assert f.x == 42
     assert f.x.__class__ is int
+    #
+    assert f.y == datetime(2012, 5, 13)
+    assert f.y.__class__ is datetime
 
 def test_XmlEntity_cache():
     elem = objectify.fromstring("<foo><x>hello</x></foo>")
