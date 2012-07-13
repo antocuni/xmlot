@@ -24,6 +24,7 @@ class XmlEntity(object):
             if self.xmlns is not None:
                 tag = '{%s}%s' % (self.xmlns, tag)
             elem = objectify.Element(tag)
+        assert isinstance(elem, objectify.ObjectifiedElement)
         self.__dict__['_elem'] = elem
 
     def __getattr__(self, attr):

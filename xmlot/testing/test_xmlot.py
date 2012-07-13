@@ -128,11 +128,13 @@ def test_XmlList_filter():
           <x>hello</x>
           <y>world</y>
           <z>42</z>
+          <fruit>apple</fruit>
         </bar>
         <bar>
           <x>foo</x>
           <y>bar</y>
           <z>1042</z>
+          <fruit>orange</fruit>
         </bar>
       </bars>
     """)
@@ -141,6 +143,14 @@ def test_XmlList_filter():
         xml_tag = 'bar'
         class types:
             z = Integer()
+        class Admin:
+            field_attributes = {
+                'fruit': {
+                    'choices': lambda obj: [('apple', 'mela'),
+                                            ('orange', 'arancia')]
+                    }
+                }
+
     mylist = XmlListWrapper(root, Bar, root.bar)
     mylist2 = mylist.filter(['x'], 'hel')
     assert len(mylist2) == 1
@@ -158,7 +168,14 @@ def test_XmlList_filter():
     #
     mylist2 = mylist.filter(['z'], '42')
     assert len(mylist2) == 1
-    
+    #
+    mylist2 = mylist.filter(['fruit'], 'app')
+    assert len(mylist2) == 0
+    #
+    mylist2 = mylist.filter(['fruit'], 'me')
+    assert len(mylist2) == 1
+    assert mylist2[0].fruit == 'apple'
+
 
 
 def test_XmlOneToMany():

@@ -156,10 +156,20 @@ class XmlListWrapper(object):
         newitems = []
         for item in self:
             for field in search_fields:
-                field_type = getattr(item.__class__.types, field, Unicode())
+                cls = item.__class__
+                field_type = getattr(cls.types, field, Unicode())
                 field_val = getattr(item, field)
+                # if the admin has a choices attribute, "translate" the field
+                # val so that it matches what is displayed to the user
+                try:
+                    choices = cls.Admin.field_attributes[field]['choices']
+                except (AttributeError, KeyError):
+                    pass
+                else:
+                    choices_list = choices(item)
+                    field_val = dict(choices_list)[field_val]
                 if field_type.matches(field_val, text):
-                    newitems.append(item)
+                    newitems.append(item._elem)
         return self.__class__(self.root, self.Entity, newitems)
 
 
