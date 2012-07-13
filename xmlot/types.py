@@ -59,7 +59,7 @@ class Float(PrimitiveType):
 
 class DateTime(PrimitiveType):
     sqltype = sqltypes.DateTime()
-    default_format = '%Y-%m-%d %H:%M:%s'
+    default_format = '%Y-%m-%d %H:%M:%S'
 
     def __init__(self, name=None, format=None):
         PrimitiveType.__init__(self, name)

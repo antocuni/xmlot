@@ -6,7 +6,7 @@
       <age>30</age>
       <male>true</male>
       <city>Mouseton</city>
-      <birthday>1982-05-13 05:19</birthday>
+      <birthday>1982-05-13 05:19:00</birthday>
       <Jobs>
         <Job>
           <title>Detective</title>
@@ -22,7 +22,7 @@
       <age>28</age>
       <male>true</male>
       <city>Duckburg</city>
-      <birthday>1984-05-13 12:42</birthday>
+      <birthday>1984-05-13 12:42:00</birthday>
       <Jobs>
         <Job>
           <title>Unemployed</title>
