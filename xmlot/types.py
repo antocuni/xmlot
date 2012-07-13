@@ -91,7 +91,12 @@ class XmlList(XmlRelation):
             subroot = getattr_ex(obj._elem, self.subpath)
         except AttributeError:
             assert '.' not in self.subpath, 'XXX implement me'
-            subroot = objectify.Element(self.subpath)
+            tag = self.subpath
+            if self.entity_cls.xmlns:
+                # we assume that the namespace of the list is the same as the
+                # namespace of the items
+                tag = '{%s}%s' % (self.entity_cls.xmlns, tag)
+            subroot = objectify.Element(tag)
             obj._elem.append(subroot)
         #
         try:

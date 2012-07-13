@@ -100,6 +100,27 @@ def test_XmlEntity_list():
     assert bars.root.getparent() is f._elem
 
 
+def test_XmlEntity_list_namespace():
+    class Bar(XmlEntity):
+        xmlns = 'http://foo.bar'
+        xml_path = 'bars'
+        xml_tag = 'bar'
+    class Foo(XmlEntity):
+        xmlns = 'http://foo.bar'
+        xml_path = ''
+        xml_tag = 'foo'
+        class types:
+            bars = XmlList('bars', Bar)
+    #
+    f = Foo()
+    bars = f.bars
+    assert isinstance(bars, XmlListWrapper)
+    mybar = Bar()
+    bars.append(mybar)
+    assert f.bars[0]._elem is mybar._elem
+
+
+
 def test_XmlList_filter():
     root = objectify.fromstring("""
       <bars>
