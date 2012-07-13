@@ -96,6 +96,8 @@ def test_XmlEntity_list():
     bars = f.bars
     assert isinstance(bars, XmlListWrapper)
     assert len(bars) == 0
+    assert bars.root.tag == 'bars'
+    assert bars.root.getparent() is f._elem
 
 
 def test_XmlList_filter():

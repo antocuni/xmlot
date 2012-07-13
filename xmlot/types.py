@@ -1,4 +1,5 @@
 from datetime import datetime
+from lxml import objectify
 from sqlalchemy import types as sqltypes
 
 class Type(object):
@@ -88,9 +89,14 @@ class XmlList(XmlRelation):
     def lookup(self, obj, attr):
         try:
             subroot = getattr_ex(obj._elem, self.subpath)
+        except AttributeError:
+            assert '.' not in self.subpath, 'XXX implement me'
+            subroot = objectify.Element(self.subpath)
+            obj._elem.append(subroot)
+        #
+        try:
             val = getattr(subroot, self.entity_cls.xml_tag)
         except AttributeError:
-            subroot = obj._elem # ???
             val = []
         return XmlListWrapper(subroot, self.entity_cls, val)
 
