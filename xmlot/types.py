@@ -44,6 +44,9 @@ class Boolean(PrimitiveType):
 
 class Unicode(PrimitiveType):
     sqltype = sqltypes.Unicode()
+    @staticmethod
+    def python_type(x):
+        return unicode(x.text)
 
     def matches(self, value, text):
         return text in unicode(value).lower()
