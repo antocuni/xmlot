@@ -1,6 +1,10 @@
 from lxml import objectify
-from xmlot.types import XmlRelation
+from xmlot.types import XmlRelation, Type
 
+def new_element(tag, xmlns=None):
+    if xmlns is not None:
+        tag = '{%s}%s' % (xmlns, tag)
+    return objectify.Element(tag)
 
 class XmlEntity(object):
     xmlns = None   # default to no namespace
@@ -20,10 +24,12 @@ class XmlEntity(object):
 
     def __init__(self, elem=None):
         if elem is None:
-            tag = self.xml_tag
-            if self.xmlns is not None:
-                tag = '{%s}%s' % (self.xmlns, tag)
-            elem = objectify.Element(tag)
+            elem = new_element(self.xml_tag, self.xmlns)
+            if hasattr(self, 'types'):
+                for subtag, xmltype in self.types.__dict__.iteritems():
+                    if isinstance(xmltype, Type):
+                        child = new_element(subtag, self.xmlns)
+                        elem.append(child)
         assert isinstance(elem, objectify.ObjectifiedElement)
         self.__dict__['_elem'] = elem
 

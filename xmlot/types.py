@@ -100,16 +100,14 @@ class XmlList(XmlRelation):
         self.entity_cls = entity_cls
 
     def lookup(self, obj, attr):
+        from xmlot.entity import new_element
         try:
             subroot = getattr_ex(obj._elem, self.subpath)
         except AttributeError:
             assert '.' not in self.subpath, 'XXX implement me'
-            tag = self.subpath
-            if self.entity_cls.xmlns:
-                # we assume that the namespace of the list is the same as the
-                # namespace of the items
-                tag = '{%s}%s' % (self.entity_cls.xmlns, tag)
-            subroot = objectify.Element(tag)
+            # we assume that the namespace of the list is the same as the
+            # namespace of the items
+            subroot = new_element(self.subpath, self.entity_cls.xmlns)
             obj._elem.append(subroot)
         #
         try:

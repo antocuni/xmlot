@@ -25,6 +25,19 @@ def test_XmlEntity():
     assert elem.x == 'world'
     assert f.non_existent is None
 
+def test_XmlEntity_default_children():
+    class Foo(XmlEntity):
+        xmlns = 'http://foo.bar'
+        xml_tag = 'foo'
+        class types:
+            name = Unicode('name of foo')
+    f = Foo()
+    children = f._elem.getchildren()
+    assert f.name == ''
+    assert len(children) == 1
+    assert children[0].tag == '{http://foo.bar}name'
+
+
 def test_XmlEntity_namespace():
     class Foo(XmlEntity):
         xml_tag = 'foo'
