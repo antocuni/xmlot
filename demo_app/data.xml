@@ -6,7 +6,6 @@
       <age>30</age>
       <male>true</male>
       <city>Mouseton</city>
-      <animal>0</animal>
       <birthday>1982-05-13 05:19:00</birthday>
       <Jobs>
         <Job>
@@ -23,7 +22,6 @@
       <age>28</age>
       <male>true</male>
       <city>Duckburg</city>
-      <animal>1</animal>
       <birthday>1984-05-13 12:42:00</birthday>
       <Jobs>
         <Job>
@@ -35,4 +33,17 @@
       </Jobs>
     </Person>
   </Persons>
+
+  <Uncles>
+    <Uncle>
+      <name>Uncle Scrooge</name>
+      <age>70</age>
+      <relative>Donald</relative>
+    </Uncle>
+    <Uncle>
+      <name>Mickey's Uncle</name>
+      <age>80</age>
+      <relative>Mickey</relative>
+    </Uncle>
+  </Uncles>
 </root>
