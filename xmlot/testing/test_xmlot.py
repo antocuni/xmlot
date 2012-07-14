@@ -40,6 +40,13 @@ def test_Boolean():
     assert Boolean.python_type('true') == True
     assert Boolean.python_type('false') == False
 
+def test_Boolean_match():
+    b = Boolean('foo')
+    assert b.matches(True, 'true')
+    assert b.matches(False, 'false')
+    assert not b.matches(True, 'hello')
+    assert not b.matches(False, 'hello')
+
 def test_XmlEntity_types():
     elem = objectify.fromstring("<foo><x>42</x> <y>2012-05-13</y></foo>")
     class Foo(XmlEntity):

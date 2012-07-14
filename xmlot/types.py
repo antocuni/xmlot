@@ -43,6 +43,16 @@ class Boolean(PrimitiveType):
             return val == 'true'
         return bool(val) # ???
 
+    def matches(self, value, text):
+        """
+        Only "true" or "false" strings match, everything else do not
+        """
+        assert isinstance(value, bool)
+        text = text.capitalize()
+        if text in ('False', 'True'):
+            return str(value) == text
+        return False
+
 class Unicode(PrimitiveType):
     sqltype = sqltypes.Unicode()
     @staticmethod
