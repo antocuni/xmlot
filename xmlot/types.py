@@ -18,6 +18,8 @@ class PrimitiveType(Type):
 
     def lookup(self, obj, attr):
         val = getattr(obj._elem, attr, None)
+        if val == '':
+            val = None
         if val is not None:
             val = self.python_type(val)
         return val
