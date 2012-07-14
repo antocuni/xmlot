@@ -4,7 +4,7 @@ from xmlot.types import XmlRelation, Type
 def new_element(tag, xmlns=None):
     if xmlns is not None:
         tag = '{%s}%s' % (xmlns, tag)
-    return objectify.Element(tag)
+    return getattr(objectify.E, tag)()
 
 class XmlEntity(object):
     xmlns = None   # default to no namespace
