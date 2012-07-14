@@ -33,7 +33,7 @@ def test_XmlEntity_default_children():
             name = Unicode('name of foo')
     f = Foo()
     children = f._elem.getchildren()
-    assert f.name == 'None'
+    assert f.name is None
     assert len(children) == 1
     assert children[0].tag == '{http://foo.bar}name'
 
